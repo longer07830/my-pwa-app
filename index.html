@@ -91,16 +91,19 @@
       }
     </style>
     <script>
+        let currentSiteUrl = 'https://www.nfyingshi.com/';
+
         function toggleMenu() {
             const menu = document.getElementById('menu-container');
             menu.classList.toggle('show');
         }
         function loadSite(url) {
             document.getElementById('webview').src = url;
+            currentSiteUrl = url;
             toggleMenu();
         }
-        function goBack() {
-            document.getElementById('webview').contentWindow.history.back();
+        function goHome() {
+            document.getElementById('webview').src = currentSiteUrl;
         }
         function saveToHistory() {
             const iframe = document.getElementById('webview');
@@ -133,7 +136,7 @@
 <body>
 
     <div id="control-buttons">
-      <button id="back-button" class="control-button" onclick="goBack()">←</button>
+      <button id="home-button" class="control-button" onclick="goHome()">🏠</button>
       <button id="save-button" class="control-button" onclick="saveToHistory()">💾</button>
     </div>
     
