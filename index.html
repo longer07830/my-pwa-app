@@ -20,31 +20,9 @@
         height: 100%;
         border: none;
       }
-      #control-buttons {
+      .fixed-button {
         position: fixed;
         bottom: 20px;
-        left: 20px;
-        z-index: 2147483647;
-        display: flex;
-        gap: 10px;
-      }
-      .control-button {
-        width: 50px;
-        height: 50px;
-        background-color: rgba(0, 0, 0, 0.7);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        font-size: 24px;
-        line-height: 50px;
-        text-align: center;
-        cursor: pointer;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      }
-      #menu-toggle {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
         z-index: 2147483647;
         width: 50px;
         height: 50px;
@@ -58,11 +36,17 @@
         cursor: pointer;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       }
+      #home-button { left: 20px; }
+      #save-button { left: 80px; }
+      #menu-toggle { right: 20px; }
+      
       #menu-container {
         position: fixed;
         bottom: 0;
         left: 0;
         width: 100%;
+        max-height: 80vh;
+        overflow-y: auto;
         background-color: rgba(0, 0, 0, 0.9);
         padding: 20px 0;
         text-align: center;
@@ -95,7 +79,6 @@
         const params = new URLSearchParams(window.location.search);
         const historyUrl = params.get('url');
 
-        // 在页面加载前就决定 iframe 的 src
         document.addEventListener('DOMContentLoaded', () => {
           const webview = document.getElementById('webview');
           if (historyUrl) {
@@ -117,42 +100,54 @@
         function goHome() {
             document.getElementById('webview').src = currentSiteUrl;
         }
+
         function saveToHistory() {
             const iframe = document.getElementById('webview');
-            let url = '';
-            let title = '';
+            let videoTitle = '';
+            let videoUrl = '';
+            
             try {
-              url = iframe.contentWindow.location.href;
-              title = iframe.contentDocument.title || "无标题";
-            } catch(e) {
-              url = iframe.src;
-              title = "无标题";
+                // 尝试从 iframe 获取标题
+                videoTitle = iframe.contentDocument.title || "无标题";
+                
+                // 尝试从 iframe 内部获取视频播放地址
+                const videoElement = iframe.contentDocument.querySelector('video');
+                if (videoElement && videoElement.src) {
+                    videoUrl = videoElement.src;
+                } else {
+                    // 如果无法获取视频元素，则尝试获取当前页面的网址
+                    videoUrl = iframe.contentWindow.location.href;
+                }
+
+            } catch (e) {
+                // 跨域或出现其他错误时
+                videoUrl = iframe.src;
+                videoTitle = "无标题";
             }
             
-            const recordTitle = prompt("请输入此记录的标题：", title);
+            const recordTitle = prompt("请输入此记录的标题：", videoTitle);
 
-            if (recordTitle) {
+            if (recordTitle && videoUrl) {
                 try {
                     let history = JSON.parse(localStorage.getItem('history')) || [];
-                    const record = { title: recordTitle, url: url };
+                    const record = { title: recordTitle, url: videoUrl };
                     history.unshift(record);
                     localStorage.setItem('history', JSON.stringify(history));
                     alert("记录已保存！");
                 } catch (e) {
                     alert("保存记录失败，浏览器不支持此功能。");
                 }
+            } else {
+                alert("无法自动获取视频网址，请确保你已打开视频播放页面。");
             }
         }
     </script>
 </head>
 <body>
 
-    <div id="control-buttons">
-      <button id="home-button" class="control-button" onclick="goHome()">🏠</button>
-      <button id="save-button" class="control-button" onclick="saveToHistory()">💾</button>
-    </div>
-    
-    <button id="menu-toggle" onclick="toggleMenu()">+</button>
+    <button id="home-button" class="fixed-button" onclick="goHome()">🏠</button>
+    <button id="save-button" class="fixed-button" onclick="saveToHistory()">💾</button>
+    <button id="menu-toggle" class="fixed-button" onclick="toggleMenu()">+</button>
 
     <div id="menu-container">
       <button onclick="loadSite('https://www.nfyingshi.com/')">奈菲影视</button>
