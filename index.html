@@ -20,9 +20,31 @@
         height: 100%;
         border: none;
       }
-      #menu-toggle, #back-button, #save-button {
+      #control-buttons {
         position: fixed;
         bottom: 20px;
+        left: 20px;
+        z-index: 2147483647;
+        display: flex;
+        gap: 10px;
+      }
+      .control-button {
+        width: 50px;
+        height: 50px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 24px;
+        line-height: 50px;
+        text-align: center;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+      #menu-toggle {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
         z-index: 2147483647;
         width: 50px;
         height: 50px;
@@ -36,10 +58,6 @@
         cursor: pointer;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       }
-      #menu-toggle { right: 20px; }
-      #back-button { left: 20px; }
-      #save-button { left: 80px; }
-      
       #menu-container {
         position: fixed;
         bottom: 0;
@@ -86,14 +104,12 @@
         }
         function saveToHistory() {
             const iframe = document.getElementById('webview');
-            // Check if we can access the iframe content
             let url = '';
             let title = '';
             try {
               url = iframe.contentWindow.location.href;
               title = iframe.contentDocument.title || "无标题";
             } catch(e) {
-              // If cross-origin security error, use a fallback
               url = iframe.src;
               title = "无标题";
             }
@@ -116,9 +132,12 @@
 </head>
 <body>
 
+    <div id="control-buttons">
+      <button id="back-button" class="control-button" onclick="goBack()">←</button>
+      <button id="save-button" class="control-button" onclick="saveToHistory()">💾</button>
+    </div>
+    
     <button id="menu-toggle" onclick="toggleMenu()">+</button>
-    <button id="back-button" onclick="goBack()">←</button>
-    <button id="save-button" onclick="saveToHistory()">💾</button>
 
     <div id="menu-container">
       <button onclick="loadSite('https://www.nfyingshi.com/')">奈菲影视</button>
