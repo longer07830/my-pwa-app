@@ -5,6 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>自赏影视仓App</title>
     <link rel="manifest" href="/manifest.json">
+    <style>
+      #menu {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 10px;
+        text-align: center;
+        z-index: 1000;
+        transition: transform 0.3s ease-in-out;
+      }
+      #menu button {
+        margin: 0 5px;
+        padding: 8px 15px;
+        font-size: 16px;
+        background-color: #555;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
     <script>
        function loadSite(url) {
        document.getElementById('webview').src = url;
