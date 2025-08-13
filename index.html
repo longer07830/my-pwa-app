@@ -6,37 +6,85 @@
     <title>自赏影视仓App</title>
     <link rel="manifest" href="/manifest.json">
     <style>
-      #menu {
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000000;
+      }
+      #webview {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+      #menu-toggle {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1001;
+        width: 50px;
+        height: 50px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 24px;
+        line-height: 50px;
+        text-align: center;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+      #menu-container {
         position: fixed;
         bottom: 0;
         left: 0;
         width: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        padding: 10px;
+        background-color: rgba(0, 0, 0, 0.9);
+        padding: 20px 0;
         text-align: center;
         z-index: 1000;
+        transform: translateY(100%);
         transition: transform 0.3s ease-in-out;
       }
-      #menu button {
-        margin: 0 5px;
-        padding: 8px 15px;
-        font-size: 16px;
+      #menu-container.show {
+        transform: translateY(0);
+      }
+      #menu-container button {
+        display: block;
+        width: 90%;
+        margin: 10px auto;
+        padding: 15px;
+        font-size: 18px;
         background-color: #555;
         color: white;
         border: none;
-        border-radius: 5px;
+        border-radius: 8px;
         cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      #menu-container button:hover {
+        background-color: #777;
       }
     </style>
     <script>
-       function loadSite(url) {
-       document.getElementById('webview').src = url;
-       }
-    </script>    
+        function toggleMenu() {
+            const menu = document.getElementById('menu-container');
+            menu.classList.toggle('show');
+        }
+        function loadSite(url) {
+            document.getElementById('webview').src = url;
+            toggleMenu(); // 切换网站后自动关闭菜单
+        }
+    </script>
 </head>
-<body style="margin:0; padding:0; overflow:hidden; background-color:#000000;">
+<body>
 
-    <div id="menu">
+    <button id="menu-toggle" onclick="toggleMenu()">+</button>
+
+    <div id="menu-container">
       <button onclick="loadSite('https://www.nfyingshi.com/')">奈菲影视</button>
       <button onclick="loadSite('https://www.kanys3.com/')">影视大全</button>
       <button onclick="loadSite('https://www.libvio.site/')">LIBVIO</button>
@@ -46,7 +94,6 @@
     </div>
 
     <iframe id="webview" src="https://www.nfyingshi.com/"
-            style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;"
             allowfullscreen="true"
             allow="fullscreen">
     </iframe>
