@@ -131,6 +131,15 @@
                 }
             }
         }
+        
+        // 新增代码：检查网址参数并加载相应页面
+        window.onload = function() {
+          const params = new URLSearchParams(window.location.search);
+          const historyUrl = params.get('url');
+          if (historyUrl) {
+            document.getElementById('webview').src = decodeURIComponent(historyUrl);
+          }
+        };
     </script>
 </head>
 <body>
@@ -149,7 +158,6 @@
       <button onclick="loadSite('https://www.laodifang.cc/')">老地方影院</button>
       <button onclick="loadSite('https://www.xz8.cc/')">永乐蓝光影院</button>
       <button onclick="loadSite('https://tv.baozangdh.com/')">影视导航</button>
-      <button onclick="window.location.href = 'history.html'">观看记录</button>
     </div>
 
     <iframe id="webview" src="https://www.nfyingshi.com/"
