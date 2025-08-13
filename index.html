@@ -20,10 +20,31 @@
         height: 100%;
         border: none;
       }
-      /* 统一控制所有底部固定按钮 */
-      .fixed-button {
+      #control-buttons {
         position: fixed;
         bottom: 20px;
+        left: 20px;
+        z-index: 2147483647;
+        display: flex;
+        gap: 10px;
+      }
+      .control-button {
+        width: 50px;
+        height: 50px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 24px;
+        line-height: 50px;
+        text-align: center;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+      #menu-toggle {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
         z-index: 2147483647;
         width: 50px;
         height: 50px;
@@ -37,17 +58,11 @@
         cursor: pointer;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       }
-      #home-button { left: 20px; }
-      #save-button { left: 80px; }
-      #menu-toggle { right: 20px; }
-      
       #menu-container {
         position: fixed;
         bottom: 0;
         left: 0;
         width: 100%;
-        max-height: 80vh; /* 限制最大高度，防止内容过多超出屏幕 */
-        overflow-y: auto; /* 超出时允许滚动 */
         background-color: rgba(0, 0, 0, 0.9);
         padding: 20px 0;
         text-align: center;
@@ -77,6 +92,18 @@
     </style>
     <script>
         let currentSiteUrl = 'https://www.nfyingshi.com/';
+        const params = new URLSearchParams(window.location.search);
+        const historyUrl = params.get('url');
+
+        // 在页面加载前就决定 iframe 的 src
+        document.addEventListener('DOMContentLoaded', () => {
+          const webview = document.getElementById('webview');
+          if (historyUrl) {
+            webview.src = decodeURIComponent(historyUrl);
+          } else {
+            webview.src = currentSiteUrl;
+          }
+        });
 
         function toggleMenu() {
             const menu = document.getElementById('menu-container');
@@ -116,21 +143,16 @@
                 }
             }
         }
-        
-        window.onload = function() {
-          const params = new URLSearchParams(window.location.search);
-          const historyUrl = params.get('url');
-          if (historyUrl) {
-            document.getElementById('webview').src = decodeURIComponent(historyUrl);
-          }
-        };
     </script>
 </head>
 <body>
 
-    <button id="home-button" class="fixed-button" onclick="goHome()">🏠</button>
-    <button id="save-button" class="fixed-button" onclick="saveToHistory()">💾</button>
-    <button id="menu-toggle" class="fixed-button" onclick="toggleMenu()">+</button>
+    <div id="control-buttons">
+      <button id="home-button" class="control-button" onclick="goHome()">🏠</button>
+      <button id="save-button" class="control-button" onclick="saveToHistory()">💾</button>
+    </div>
+    
+    <button id="menu-toggle" onclick="toggleMenu()">+</button>
 
     <div id="menu-container">
       <button onclick="loadSite('https://www.nfyingshi.com/')">奈菲影视</button>
@@ -142,7 +164,7 @@
       <button onclick="window.location.href = 'history.html'">观看记录</button>
     </div>
 
-    <iframe id="webview" src="https://www.nfyingshi.com/"
+    <iframe id="webview"
             allowfullscreen="true"
             allow="fullscreen">
     </iframe>
