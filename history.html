@@ -35,6 +35,7 @@
         text-decoration: none;
         font-size: 16px;
         flex-grow: 1;
+        margin-right: 10px;
       }
       .back-button {
         display: block;
@@ -49,14 +50,17 @@
         text-align: center;
         text-decoration: none;
       }
-      .delete-button {
+      .delete-button, .copy-button {
         background-color: #e53935;
         color: white;
         border: none;
         border-radius: 5px;
         padding: 5px 10px;
-        margin-left: 10px;
+        margin-left: 5px;
         cursor: pointer;
+      }
+      .copy-button {
+        background-color: #388e3c;
       }
     </style>
 </head>
@@ -77,17 +81,29 @@
           history.forEach((record, index) => {
             const listItem = document.createElement('li');
             const link = document.createElement('a');
-            
-            // 关键修改：正确设置跳转链接，使其返回到带参数的首页
             link.href = `index.html?url=${encodeURIComponent(record.url)}`;
             link.textContent = record.title;
             
+            const copyBtn = document.createElement('button');
+            copyBtn.textContent = '复制';
+            copyBtn.className = 'copy-button';
+            copyBtn.onclick = (event) => {
+                event.preventDefault(); // 阻止a标签的默认跳转行为
+                navigator.clipboard.writeText(record.title)
+                    .then(() => alert('视频名称已复制到剪贴板！'))
+                    .catch(err => console.error('复制失败: ', err));
+            };
+
             const deleteBtn = document.createElement('button');
             deleteBtn.textContent = '删除';
             deleteBtn.className = 'delete-button';
-            deleteBtn.onclick = () => deleteRecord(index);
+            deleteBtn.onclick = (event) => {
+                event.preventDefault();
+                deleteRecord(index);
+            };
 
             listItem.appendChild(link);
+            listItem.appendChild(copyBtn);
             listItem.appendChild(deleteBtn);
             historyList.appendChild(listItem);
           });
