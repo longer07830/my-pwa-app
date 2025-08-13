@@ -75,6 +75,9 @@
         const historyList = document.getElementById('history-list');
         const history = JSON.parse(localStorage.getItem('history')) || [];
         
+        // 先清空列表，防止重复
+        historyList.innerHTML = '';
+        
         if (history.length === 0) {
           historyList.innerHTML = '<p style="text-align:center;">没有保存的记录。</p>';
         } else {
@@ -99,7 +102,7 @@
             deleteBtn.className = 'delete-button';
             deleteBtn.onclick = (event) => {
                 event.preventDefault();
-                deleteRecord(index);
+                deleteRecord(index); // 确保传递正确的索引
             };
 
             listItem.appendChild(link);
@@ -112,9 +115,13 @@
 
       function deleteRecord(index) {
         let history = JSON.parse(localStorage.getItem('history')) || [];
-        history.splice(index, 1);
-        localStorage.setItem('history', JSON.stringify(history));
-        loadHistory();
+        
+        // 检查索引是否有效
+        if (index >= 0 && index < history.length) {
+            history.splice(index, 1);
+            localStorage.setItem('history', JSON.stringify(history));
+            loadHistory(); // 删除后重新加载列表
+        }
       }
 
       loadHistory();
