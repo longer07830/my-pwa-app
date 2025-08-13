@@ -86,13 +86,24 @@
         }
         function saveToHistory() {
             const iframe = document.getElementById('webview');
-            const url = iframe.contentWindow.location.href;
-            const title = prompt("请输入此记录的标题：", iframe.contentDocument.title || "无标题");
+            // Check if we can access the iframe content
+            let url = '';
+            let title = '';
+            try {
+              url = iframe.contentWindow.location.href;
+              title = iframe.contentDocument.title || "无标题";
+            } catch(e) {
+              // If cross-origin security error, use a fallback
+              url = iframe.src;
+              title = "无标题";
+            }
+            
+            const recordTitle = prompt("请输入此记录的标题：", title);
 
-            if (title) {
+            if (recordTitle) {
                 try {
                     let history = JSON.parse(localStorage.getItem('history')) || [];
-                    const record = { title: title, url: url };
+                    const record = { title: recordTitle, url: url };
                     history.unshift(record);
                     localStorage.setItem('history', JSON.stringify(history));
                     alert("记录已保存！");
