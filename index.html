@@ -20,11 +20,10 @@
         height: 100%;
         border: none;
       }
-      #menu-toggle {
+      #menu-toggle, #back-button, #save-button {
         position: fixed;
         bottom: 20px;
-        right: 20px;
-        z-index: 9999;
+        z-index: 2147483647;
         width: 50px;
         height: 50px;
         background-color: rgba(0, 0, 0, 0.7);
@@ -37,23 +36,10 @@
         cursor: pointer;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       }
-      #back-button {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        z-index: 9999;
-        width: 50px;
-        height: 50px;
-        background-color: rgba(0, 0, 0, 0.7);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        font-size: 24px;
-        line-height: 50px;
-        text-align: center;
-        cursor: pointer;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      }
+      #menu-toggle { right: 20px; }
+      #back-button { left: 20px; }
+      #save-button { left: 80px; }
+      
       #menu-container {
         position: fixed;
         bottom: 0;
@@ -62,7 +48,7 @@
         background-color: rgba(0, 0, 0, 0.9);
         padding: 20px 0;
         text-align: center;
-        z-index: 9998;
+        z-index: 2147483646;
         transform: translateY(100%);
         transition: transform 0.3s ease-in-out;
       }
@@ -93,10 +79,27 @@
         }
         function loadSite(url) {
             document.getElementById('webview').src = url;
-            toggleMenu(); // 切换网站后自动关闭菜单
+            toggleMenu();
         }
         function goBack() {
             document.getElementById('webview').contentWindow.history.back();
+        }
+        function saveToHistory() {
+            const iframe = document.getElementById('webview');
+            const url = iframe.contentWindow.location.href;
+            const title = prompt("请输入此记录的标题：", iframe.contentDocument.title || "无标题");
+
+            if (title) {
+                try {
+                    let history = JSON.parse(localStorage.getItem('history')) || [];
+                    const record = { title: title, url: url };
+                    history.unshift(record);
+                    localStorage.setItem('history', JSON.stringify(history));
+                    alert("记录已保存！");
+                } catch (e) {
+                    alert("保存记录失败，浏览器不支持此功能。");
+                }
+            }
         }
     </script>
 </head>
@@ -104,6 +107,7 @@
 
     <button id="menu-toggle" onclick="toggleMenu()">+</button>
     <button id="back-button" onclick="goBack()">←</button>
+    <button id="save-button" onclick="saveToHistory()">💾</button>
 
     <div id="menu-container">
       <button onclick="loadSite('https://www.nfyingshi.com/')">奈菲影视</button>
