@@ -42,38 +42,38 @@
       
       #menu-container {
         position: fixed;
-        bottom: 80px; /* 菜单位置调整到按钮上方 */
-        right: 20px; /* 菜单位置调整到右侧 */
-        display: none; /* 默认隐藏 */
+        bottom: 80px;
+        right: 20px;
+        display: none;
         background-color: rgba(0, 0, 0, 0.9);
         padding: 10px;
-        text-align: right; /* 按钮右对齐 */
+        text-align: right;
         z-index: 2147483646;
         border-radius: 8px;
         transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
         transform: translateY(100%) scale(0.9);
         opacity: 0;
-        transform-origin: bottom right; /* 动画原点在右下角 */
+        transform-origin: bottom right;
       }
       #menu-container.show {
-        display: block; /* 显示菜单 */
+        display: block;
         transform: translateY(0) scale(1);
         opacity: 1;
       }
       #menu-container button {
         display: block;
-        width: auto; /* 宽度自适应内容 */
-        min-width: 150px; /* 最小宽度 */
-        margin: 10px 0; /* 调整外边距 */
+        width: auto;
+        min-width: 150px;
+        margin: 10px 0;
         padding: 15px;
-        font-size: 18px;
+        font-size: 16px;
         background-color: #555;
         color: white;
         border: none;
         border-radius: 8px;
         cursor: pointer;
         transition: background-color 0.2s;
-        text-align: center; /* 文本居中 */
+        text-align: center;
       }
       #menu-container button:hover {
         background-color: #777;
@@ -109,17 +109,15 @@
         function saveToHistory() {
             const recordTitle = prompt("请输入此记录的标题：");
             if (recordTitle) {
-                const recordUrl = prompt("请在此处粘贴视频播放页面的完整网址：");
-                if (recordUrl) {
-                    try {
-                        let history = JSON.parse(localStorage.getItem('history')) || [];
-                        const record = { title: recordTitle, url: recordUrl };
-                        history.unshift(record);
-                        localStorage.setItem('history', JSON.stringify(history));
-                        alert("记录已保存！");
-                    } catch (e) {
-                        alert("保存记录失败，浏览器不支持此功能。");
-                    }
+                const recordUrl = currentSiteUrl;
+                try {
+                    let history = JSON.parse(localStorage.getItem('history')) || [];
+                    const record = { title: recordTitle, url: recordUrl };
+                    history.unshift(record);
+                    localStorage.setItem('history', JSON.stringify(history));
+                    alert("记录已保存！");
+                } catch (e) {
+                    alert("保存记录失败，浏览器不支持此功能。");
                 }
             }
         }
@@ -138,6 +136,7 @@
       <button onclick="loadSite('https://www.laodifang.cc/')">老地方影院</button>
       <button onclick="loadSite('https://www.xz8.cc/')">永乐蓝光影院</button>
       <button onclick="loadSite('https://tv.baozangdh.com/')">影视导航</button>
+      <button onclick="loadSite('https://nanapro.org/')">Motchill</button>
       <button onclick="window.location.href = 'history.html'">观看记录</button>
     </div>
 
