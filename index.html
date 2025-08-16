@@ -36,6 +36,16 @@
       #save-button { left: 70px; width: 40px; height: 40px; font-size: 18px; line-height: 40px; }
       #menu-toggle { right: 20px; width: 40px; height: 40px; font-size: 18px; line-height: 40px; }
 
+      #menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2147483645;
+        display: none;
+      }
+
       #menu-container {
         position: fixed;
         bottom: 70px;
@@ -79,7 +89,6 @@
         let currentSiteUrl = 'https://www.nfyingshi.com/';
         const params = new URLSearchParams(window.location.search);
         const historyUrl = params.get('url');
-        let menuVisible = false;
 
         document.addEventListener('DOMContentLoaded', () => {
           const webview = document.getElementById('webview');
@@ -89,19 +98,20 @@
             webview.src = currentSiteUrl;
           }
 
-          document.addEventListener('click', (event) => {
-            const menuContainer = document.getElementById('menu-container');
-            const menuToggle = document.getElementById('menu-toggle');
-            if (menuVisible && event.target !== menuContainer && !menuContainer.contains(event.target) && event.target !== menuToggle) {
-              toggleMenu();
-            }
-          });
+          // 新增点击事件，用于关闭菜单
+          document.getElementById('menu-overlay').addEventListener('click', toggleMenu);
         });
 
         function toggleMenu() {
             const menu = document.getElementById('menu-container');
-            menu.classList.toggle('show');
-            menuVisible = !menuVisible;
+            const overlay = document.getElementById('menu-overlay');
+            if (menu.classList.contains('show')) {
+                menu.classList.remove('show');
+                overlay.style.display = 'none';
+            } else {
+                menu.classList.add('show');
+                overlay.style.display = 'block';
+            }
         }
         function loadSite(url) {
             document.getElementById('webview').src = url;
@@ -145,6 +155,8 @@
       <button onclick="loadSite('https://nanapro.org/')">Motchill</button>
       <button onclick="window.location.href = 'history.html'">观看记录</button>
     </div>
+    
+    <div id="menu-overlay"></div>
 
     <iframe id="webview"
             allowfullscreen="true"
